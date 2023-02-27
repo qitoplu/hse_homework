@@ -3,11 +3,15 @@ import time
 import random
 import string
 from additional import dictionary, correct_answers
-from trashbox import add_string, wrong, right
+from trashbox import add_string, wrong, right, CONST
 
-TIMEOUT = 0
+TIMEOUT = 15
+PAUSE = 3
 ALPHABET = 'йцукенгшщзхъфывапролджэячсмитьбюё'
-complex = ALPHABET + string.punctuation + string.whitespace
+complex = (
+    ALPHABET + string.punctuation
+    + string.whitespace + string.digits
+)
 lst_count = []
 countt = 0
 
@@ -23,7 +27,7 @@ def hello():
         else:
             print('Неверный ввод, попробуйте еще раз. \n')
     if agree == 'Да':
-        return add_string
+        print(add_string)
     elif agree == 'Нет':
         print(':(')
         sys.exit()
@@ -57,7 +61,8 @@ def check_input(response):
 def counter(listik, counttt):
     """Функция подсчета набранных баллов.
     Обращается к списку и подсчитывает кол-во плюсиков,
-    добавленных функцией check_answer()."""
+    добавленных функцией check_answer().
+    Печатает количество набранных пользователем баллов."""
     for i in listik:
         if i == '+':
             counttt += 1
@@ -79,12 +84,15 @@ def questions_and_answers():
                 if check_input(answer):
                     print(
                         'Неверный формат ввода! \n'
-                        'Введите ответ на латинице без символов и пробелов. \n'
+                        'Введите ответ на латинице '
+                        'без символов, цифр и пробелов. \n'
                     )
-                    time.sleep(3)
+                    time.sleep(PAUSE)
                 else:
                     break
             print(check_answer(answer))
+            time.sleep(PAUSE)
+            print(f'{"-" * CONST}\n')
             if not dictionary:
                 print('Больше вопросов нет!')
                 break
