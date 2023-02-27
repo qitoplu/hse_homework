@@ -8,6 +8,8 @@ from trashbox import add_string, wrong, right
 TIMEOUT = 0
 ALPHABET = 'йцукенгшщзхъфывапролджэячсмитьбюё'
 complex = ALPHABET + string.punctuation + string.whitespace
+lst_count = []
+countt = 0
 
 
 def hello():
@@ -28,28 +30,28 @@ def check_answer(response):
     for key, value in correct_answers.items():
         if response.lower() == value:
             correct_answers.pop(key)
+            lst_count.append('+')
             return random.choice(right)
         else:
             correct_answers.pop(key)
+            lst_count.append('-')
             return random.choice(wrong)
 
 
 def check_input(response):
-    a = ''.join(response.lower().split(','))
-    for i in a:
-        if i in complex:
+    splitted = ''.join(response.lower().split(','))
+    for symbol in splitted:
+        if symbol in complex:
             return True
-        elif i not in a:
+        elif symbol not in splitted:
             return False
 
 
-"""def count():
-    if check_answer:
-        counter += 1
-    elif not check_answer:
-        counter -= 0.5
-    return counter
-"""
+def count(listik, counttt):
+    for i in listik:
+        if i == '+':
+            counttt += 1
+    print(f'Количество баллов: {counttt}.')
 
 
 def main():
@@ -71,7 +73,6 @@ def main():
                 else:
                     break
             print(check_answer(answer))
-            # print(count())
             if not dictionary:
                 print('Больше вопросов нет!')
                 break
@@ -81,3 +82,4 @@ print('Привет, это викторина. Играем?')
 print(hello())
 time.sleep(TIMEOUT)
 main()
+print(count(lst_count, countt))
