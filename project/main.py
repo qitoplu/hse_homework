@@ -3,9 +3,11 @@ import time
 import random
 import string
 from additional import dictionary, correct_answers
-from additional import add_string, wrong, right
+from trashbox import add_string, wrong, right
 
 TIMEOUT = 0
+ALPHABET = 'йцукенгшщзхъфывапролджэячсмитьбюё'
+complex = ALPHABET + string.punctuation + string.whitespace
 
 
 def hello():
@@ -18,12 +20,13 @@ def hello():
     if agree == 'Да':
         return add_string
     elif agree == 'Нет':
+        print(':(')
         sys.exit()
 
 
 def check_answer(response):
     for key, value in correct_answers.items():
-        if response == value:
+        if response.lower() == value:
             correct_answers.pop(key)
             return random.choice(right)
         else:
@@ -31,13 +34,21 @@ def check_answer(response):
             return random.choice(wrong)
 
 
-"""def check_input(answer):
-    while True:
-        if answer not in SYMBOLS or answer not in ALPHABET:
-            return answer
-        else:
-            'Неверный ввод'
-        break
+def check_input(response):
+    a = ''.join(response.lower().split(','))
+    for i in a:
+        if i in complex:
+            return True
+        elif i not in a:
+            return False
+
+
+"""def count():
+    if check_answer:
+        counter += 1
+    elif not check_answer:
+        counter -= 0.5
+    return counter
 """
 
 
@@ -49,8 +60,18 @@ def main():
                 print(value)
                 dictionary.pop(key)
                 break
-            answer = input()
+            while True:
+                answer = input('Введите ответ: \n')
+                if check_input(answer):
+                    print(
+                        'Неверный формат ввода! \n'
+                        'Введите ответ на латинице без символов и пробелов. \n'
+                    )
+                    time.sleep(3)
+                else:
+                    break
             print(check_answer(answer))
+            # print(count())
             if not dictionary:
                 print('Больше вопросов нет!')
                 break
