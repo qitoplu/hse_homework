@@ -1,34 +1,37 @@
-import sys
-import time
 import random
+import time
 import string
+import sys
+
 from additional import dictionary, correct_answers
 from trashbox import add_string, wrong, right, CONST
 
-TIMEOUT = 15
-PAUSE = 3
+TIMEOUT = 15  # константа для задержки инструкции пользователя
+PAUSE = 3  # константа для задержки вопроса после ответа
 ALPHABET = 'йцукенгшщзхъфывапролджэячсмитьбюё'
 complex = (
     ALPHABET + string.punctuation
     + string.whitespace + string.digits
-)
-lst_count = []
-countt = 0
+)  # комплексная строка невозможных символов ввода
+lst_count = []  # лист для плюсиков (правильных ответов)
+countt = 0  # переменная для подсчета правильных ответов
 
 
 def hello():
     """Приветственная функция,
     которая предлагает участнику запустить викторину"""
     print('Привет, это викторина. Играем?')
-    while True:
+    while True:  # цикл While, чтобы ввод не прерывался в случае ошибки.
         agree = input('Да / Нет \n')
         if agree == 'Да' or agree == 'Нет':
-            break
+            break  # если ввод корректный, останавливаем цикл
         else:
             print('Неверный ввод, попробуйте еще раз. \n')
+            # если ввод некорректный, то ввод обнулится
     if agree == 'Да':
         print(add_string)
     elif agree == 'Нет':
+        # если пользователь играть не хочет, то увы, выходим.
         print(':(')
         sys.exit()
 
@@ -37,7 +40,7 @@ def check_answer(response):
     """Функция, проверяющая правильность ответа.
     Если ответ верный, в словарь добавляется плюсик."""
     for key, value in correct_answers.items():
-        if response.lower() == value:
+        if response.lower() in value:
             correct_answers.pop(key)
             lst_count.append('+')
             return random.choice(right)
@@ -73,37 +76,37 @@ def questions_and_answers():
     """Функция, выполняющая полный цикл процедур 'вопрос' - 'ответ'.
     Когда вопросы заканчиваются, выводит завершительное сообщение."""
     while True:
-        if __name__ == '__main__':
-            for key, value in dictionary.items():
-                print(key)
-                print(value)
-                dictionary.pop(key)
+        for key, value in dictionary.items():
+            print(key)
+            print(value)
+            dictionary.pop(key)
+            break
+        while True:
+            answer = input('Введите ответ: \n')
+            if check_input(answer):
+                print(
+                    'Неверный формат ввода! \n'
+                    'Введите ответ на латинице '
+                    'без символов, цифр и пробелов. \n'
+                )
+                time.sleep(PAUSE)
+            else:
                 break
-            while True:
-                answer = input('Введите ответ: \n')
-                if check_input(answer):
-                    print(
-                        'Неверный формат ввода! \n'
-                        'Введите ответ на латинице '
-                        'без символов, цифр и пробелов. \n'
-                    )
-                    time.sleep(PAUSE)
-                else:
-                    break
-            print(check_answer(answer))
-            time.sleep(PAUSE)
-            print(f'{"-" * CONST}\n')
-            if not dictionary:
-                print('Больше вопросов нет!')
-                break
+        print(check_answer(answer))
+        time.sleep(PAUSE)
+        print(f'{"-" * CONST}\n')
+        if not dictionary:
+            print('Больше вопросов нет!')
+            break
 
 
 def main():
     """Основная функция, объединяющая работу предыдущих."""
-    hello()
-    time.sleep(TIMEOUT)
-    questions_and_answers()
-    counter(lst_count, countt)
+    if __name__ == '__main__':
+        hello()
+        time.sleep(TIMEOUT)
+        questions_and_answers()
+        counter(lst_count, countt)
 
 
 main()
