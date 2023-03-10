@@ -6,8 +6,8 @@ import sys
 from additional import dictionary, correct_answers
 from trashbox import add_string, wrong, right, CONST
 
-TIMEOUT = 15  # константа для задержки инструкции пользователя
-PAUSE = 3  # константа для задержки вопроса после ответа
+TIMEOUT = 0  # константа для задержки инструкции пользователя
+PAUSE = 0  # константа для задержки вопроса после ответа
 ALPHABET = 'йцукенгшщзхъфывапролджэячсмитьбюё'
 complex = (
     ALPHABET + string.punctuation
@@ -76,37 +76,40 @@ def questions_and_answers():
     """Функция, выполняющая полный цикл процедур 'вопрос' - 'ответ'.
     Когда вопросы заканчиваются, выводит завершительное сообщение."""
     while True:
-        for key, value in dictionary.items():
-            print(key)
-            print(value)
-            dictionary.pop(key)
-            break
-        while True:
-            answer = input('Введите ответ: \n')
-            if check_input(answer):
-                print(
-                    'Неверный формат ввода! \n'
-                    'Введите ответ на латинице '
-                    'без символов, цифр и пробелов. \n'
-                )
-                time.sleep(PAUSE)
-            else:
+        with open('result.txt', 'a', encoding='utf-8') as f:
+            for key, value in dictionary.items():
+                print(key)
+                f.write(f'Вопрос: {key} \n')
+                print(f'Возможные ответы: {value} \n')
+                f.write(value)
+                dictionary.pop(key)
                 break
-        print(check_answer(answer))
-        time.sleep(PAUSE)
-        print(f'{"-" * CONST}\n')
-        if not dictionary:
-            print('Больше вопросов нет!')
-            break
+            while True:
+                answer = input('Введите ответ: \n')
+                if check_input(answer):
+                    print(
+                        'Неверный формат ввода! \n'
+                        'Введите ответ на латинице '
+                        'без символов, цифр и пробелов. \n'
+                    )
+                    time.sleep(PAUSE)
+                else:
+                    f.write(f'Ответ пользователя: {answer} \n\n')
+                    break
+            print(check_answer(answer))
+            time.sleep(PAUSE)
+            print(f'{"-" * CONST}\n')
+            if not dictionary:
+                print('Больше вопросов нет!')
+                break
 
 
 def main():
     """Основная функция, объединяющая работу предыдущих."""
-    if __name__ == '__main__':
-        hello()
-        time.sleep(TIMEOUT)
-        questions_and_answers()
-        counter(lst_count, countt)
+    hello()
+    time.sleep(TIMEOUT)
+    questions_and_answers()
+    counter(lst_count, countt)
 
 
 main()
