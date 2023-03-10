@@ -6,6 +6,7 @@ import sys
 from additional import dictionary, correct_answers
 from trashbox import add_string, wrong, right, CONST
 
+QUESTIONS = 8
 TIMEOUT = 0  # константа для задержки инструкции пользователя
 PAUSE = 0  # константа для задержки вопроса после ответа
 ALPHABET = 'йцукенгшщзхъфывапролджэячсмитьбюё'
@@ -15,6 +16,9 @@ complex = (
 )  # комплексная строка невозможных символов ввода
 lst_count = []  # лист для плюсиков (правильных ответов)
 countt = 0  # переменная для подсчета правильных ответов
+questions1 = 0
+user_answers = {}
+lst1 = []
 
 
 def hello():
@@ -40,12 +44,15 @@ def check_answer(response):
     """Функция, проверяющая правильность ответа.
     Если ответ верный, в словарь добавляется плюсик."""
     for key, value in correct_answers.items():
+        lst1.append(f'Правильный ответ: {value}\n')
         if response.lower() in value:
             correct_answers.pop(key)
             lst_count.append('+')
+            lst1.append('Балл: 1\n')
             return random.choice(right)
         else:
             correct_answers.pop(key)
+            lst1.append('Балл: 0\n')
             return random.choice(wrong)
 
 
@@ -76,32 +83,34 @@ def questions_and_answers():
     """Функция, выполняющая полный цикл процедур 'вопрос' - 'ответ'.
     Когда вопросы заканчиваются, выводит завершительное сообщение."""
     while True:
-        with open('result.txt', 'a', encoding='utf-8') as f:
-            for key, value in dictionary.items():
-                print(key)
-                f.write(f'Вопрос: {key} \n')
-                print(f'Возможные ответы: {value} \n')
-                f.write(value)
-                dictionary.pop(key)
+        for key, value in dictionary.items():
+            print(key)
+            print(value)
+            lst1.append(f'\nВопрос: {key}\n')
+            lst1.append(f'Возможные варианты ответа: {value}')
+            dictionary.pop(key)
+            break
+        while True:
+            answer = input('Введите ответ: \n')
+            if check_input(answer):
+                print(
+                    'Неверный формат ввода! \n'
+                    'Введите ответ на латинице '
+                    'без символов, цифр и пробелов. \n'
+                )
+                time.sleep(PAUSE)
+            else:
+                lst1.append(f'Ответ пользователя: {answer}\n')
                 break
-            while True:
-                answer = input('Введите ответ: \n')
-                if check_input(answer):
-                    print(
-                        'Неверный формат ввода! \n'
-                        'Введите ответ на латинице '
-                        'без символов, цифр и пробелов. \n'
-                    )
-                    time.sleep(PAUSE)
-                else:
-                    f.write(f'Ответ пользователя: {answer} \n\n')
-                    break
-            print(check_answer(answer))
-            time.sleep(PAUSE)
-            print(f'{"-" * CONST}\n')
-            if not dictionary:
-                print('Больше вопросов нет!')
-                break
+        print(check_answer(answer))
+        while True:
+            user_answers[''] = ''.join(map(str, lst1))
+            break
+        time.sleep(PAUSE)
+        print(f'{"-" * CONST}\n')
+        if not dictionary:
+            print('Больше вопросов нет!')
+            break
 
 
 def main():
@@ -110,6 +119,10 @@ def main():
     time.sleep(TIMEOUT)
     questions_and_answers()
     counter(lst_count, countt)
+    with open('result.txt', 'w', encoding='utf-8') as f:
+        for key, value in user_answers.items():
+            f.write(key)
+            f.write(value)
 
 
 main()

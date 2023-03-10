@@ -47,9 +47,3 @@ correct_answers = {
     'question7': ["ad", "da"],
     'question8': "e",
 }
-
-user_answers = {
-    f'{[]}': f'{[]}',
-    f'{[]}': f'{[]}',
-    f'{[]}': f'{[]}',
-}
